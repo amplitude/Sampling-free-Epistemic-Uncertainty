@@ -79,7 +79,7 @@ class SigmoidActivationVarPropagationLayer(ActivationVarPropagationLayer):
         """
         approximate propagation with diagonal covariance matrix
         """
-        sigmoid = tf.nn.sigmoid(self.inputs, axis=-1)
+        sigmoid = tf.nn.sigmoid(self.inputs)
         return d_softmax_tf(x, sigmoid)
 
 class SoftmaxActivationVarPropagationLayer(ActivationVarPropagationLayer):
