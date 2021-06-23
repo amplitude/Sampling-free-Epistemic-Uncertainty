@@ -188,12 +188,8 @@ class UncertaintyPropagator():
         
         layer_type = layer.__class__.__name__
         
-        # if layer is a pooling layer
-        if layer_type in pooling_layers.keys():
-            return pooling_layers[layer_type](layer, use_cov=use_cov, **kwargs)(var)
-        
         # for affine layer we potentially need to propagate through affine layer and its activation function
-        elif layer_type in affine_layers.keys():
+        if layer_type in affine_layers.keys():
             activation_name = layer.activation.__name__
             var = affine_layers[layer_type](layer, use_cov=use_cov, **kwargs)(var)
             
