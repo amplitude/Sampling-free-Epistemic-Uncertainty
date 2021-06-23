@@ -2,6 +2,7 @@ import time
 import numpy as np
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Lambda, Concatenate, Input
+from tensorflow.python.keras.engine.input_layer import InputLayer
 
 from .layer_link import *
 from .utils.low_rank_approximation_utils import MergeLRPropagationLayer
@@ -147,13 +148,17 @@ class UncertaintyPropagator():
         return result, var_dict
 
     def get_layer_inp_mapping(self):
-
         layer_dict = dict()
         for layer in self.model.layers:
+
+            if isinstance(layer, InputLayer):
+                continue
 
             # in case layer has several inputs we need to iterate over it
             if isinstance(layer.input, list):
                 inputs = layer.input
+            elif isinstance(layer.input, dict):
+                inputs = list(layer.input.values())
             else:
                 inputs = [layer.input]
 
