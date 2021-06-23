@@ -17,7 +17,8 @@ activation_layers = {
     'linear': LinearActivationVarPropagationLayer,
     'relu': ReLUActivationVarPropagationLayer,
     'softmax': SoftmaxActivationVarPropagationLayer,
-    'tanh': TanhActivationVarPropagationLayer
+    'tanh': TanhActivationVarPropagationLayer,
+    'sigmoid', SigmoidActivationVarPropagationLayer
 }
 
 affine_layers = {

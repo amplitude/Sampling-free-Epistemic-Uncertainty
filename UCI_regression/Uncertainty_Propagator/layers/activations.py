@@ -65,6 +65,22 @@ class TanhActivationVarPropagationLayer(ActivationVarPropagationLayer):
         J = jacobian_tanh_tf(self.inputs)
         return tf.multiply(x, J**2)
 
+class SigmoidActivationVarPropagationLayer(ActivationVarPropagationLayer):
+
+    def __init__(self, inputs, layer=None, use_cov=False, **kwargs):
+        if 'soft_exact' in kwargs:
+            kwargs['exact'] = kwargs['soft_exact']
+            del kwargs['soft_exact']
+        else:
+            kwargs['exact'] = False
+        super(SigmoidActivationVarPropagationLayer, self).__init__(inputs, layer=layer, use_cov=use_cov, **kwargs)
+
+    def _call_diag_cov_approx(self, x):
+        """
+        approximate propagation with diagonal covariance matrix
+        """
+        sigmoid = tf.nn.sigmoid(self.inputs, axis=-1)
+        return d_softmax_tf(x, sigmoid)
 
 class SoftmaxActivationVarPropagationLayer(ActivationVarPropagationLayer):
 
