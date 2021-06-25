@@ -68,19 +68,17 @@ class TanhActivationVarPropagationLayer(ActivationVarPropagationLayer):
 class SigmoidActivationVarPropagationLayer(ActivationVarPropagationLayer):
 
     def __init__(self, inputs, layer=None, use_cov=False, **kwargs):
-        if 'soft_exact' in kwargs:
-            kwargs['exact'] = kwargs['soft_exact']
-            del kwargs['soft_exact']
-        else:
-            kwargs['exact'] = False
         super(SigmoidActivationVarPropagationLayer, self).__init__(inputs, layer=layer, use_cov=use_cov, **kwargs)
 
     def _call_diag_cov_approx(self, x):
         """
-        approximate propagation with diagonal covariance matrix
+        approximate propagation with diagonal covariance matrix and exact variance computation
+        under gaussian assumption
         """
         sigmoid = tf.nn.sigmoid(self.inputs)
-        return d_softmax_tf(x, sigmoid)
+        one_minus_sigmoid = tf.subtract(1.0, sigmoid)
+        product = tf.multiply(sigmoid, one_minus_sigmoid)
+        return tf.multiply(x, tf.square(product))
 
 class SoftmaxActivationVarPropagationLayer(ActivationVarPropagationLayer):
 
